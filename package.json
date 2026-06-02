@@ -1,0 +1,30 @@
+{
+  "name": "jingpian-hyperframes-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "30s HyperFrames vertical white-label editing capacity ad for Jingpian Editing.",
+  "type": "module",
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "doctor": "hyperframes doctor",
+    "preview": "hyperframes preview . --port 3002",
+    "lint": "hyperframes lint . --json",
+    "snapshot": "mkdir -p snapshots && hyperframes snapshot . --at 1.5,5.5,10,14.5,19,23,26.5,29",
+    "render": "mkdir -p dist && hyperframes render --output dist/jingpian-service-provider-ad.mp4 --fps 30 --quality high"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "hyperframes": "^0.4.44"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "hyperframes",
+    "video",
+    "html-to-video",
+    "jingpian",
+    "white-label",
+    "video-editing"
+  ]
+}

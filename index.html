@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>服务商的剪辑交付后台｜鲸片剪辑 30s HyperFrames Ad</title>
+    <style>
+      :root {
+        --bg: #060914;
+        --bg-2: #0b1230;
+        --cyan: #4de7ff;
+        --blue: #2477ff;
+        --violet: #9b5cff;
+        --pink: #ff4fd8;
+        --green: #57ffc7;
+        --text: #f7fbff;
+        --muted: rgba(222, 238, 255, 0.72);
+        --glass: rgba(255, 255, 255, 0.1);
+        --glass-strong: rgba(255, 255, 255, 0.17);
+        --line: rgba(101, 211, 255, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 18% 8%, rgba(77, 231, 255, 0.34), transparent 30%),
+          radial-gradient(circle at 86% 18%, rgba(155, 92, 255, 0.42), transparent 30%),
+          radial-gradient(circle at 58% 86%, rgba(255, 79, 216, 0.22), transparent 36%),
+          linear-gradient(160deg, #040713 0%, #091634 48%, #160b31 100%);
+        isolation: isolate;
+      }
+
+      #root::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 72px 72px;
+        transform: perspective(760px) rotateX(60deg) translateY(360px) scale(1.65);
+        transform-origin: center bottom;
+        opacity: 0.48;
+        animation: grid-flow 30s linear both;
+      }
+
+      #root::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          repeating-linear-gradient(90deg, transparent 0 44px, rgba(77, 231, 255, 0.06) 45px 47px, transparent 48px 96px),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 22%, rgba(0, 0, 0, 0.34));
+        mix-blend-mode: screen;
+        opacity: 0.72;
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      .scene {
+        display: grid;
+        align-content: center;
+        padding: 118px 74px 112px;
+      }
+
+      .scene-top {
+        position: absolute;
+        top: 72px;
+        left: 74px;
+        right: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        color: var(--muted);
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .brand-chip,
+      .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 58px;
+        padding: 14px 22px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        background: rgba(4, 10, 24, 0.5);
+        box-shadow: 0 0 34px rgba(77, 231, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border-radius: 14px;
+        color: #05101f;
+        background: linear-gradient(135deg, var(--cyan), var(--violet));
+        font-size: 25px;
+        font-weight: 1000;
+        letter-spacing: 0;
+      }
+
+      .kicker {
+        width: fit-content;
+        margin-bottom: 32px;
+        padding: 15px 22px;
+        border: 1px solid rgba(77, 231, 255, 0.58);
+        border-radius: 999px;
+        color: var(--cyan);
+        background: rgba(77, 231, 255, 0.1);
+        box-shadow: 0 0 30px rgba(77, 231, 255, 0.16);
+        font-size: 34px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      .headline {
+        max-width: 930px;
+        font-size: 116px;
+        line-height: 1.02;
+        font-weight: 1000;
+        letter-spacing: -0.075em;
+        text-wrap: balance;
+        text-shadow: 0 0 42px rgba(77, 231, 255, 0.22);
+      }
+
+      .headline.large {
+        font-size: 136px;
+      }
+
+      .headline.compact {
+        font-size: 98px;
+        line-height: 1.04;
+      }
+
+      .gradient-text {
+        color: transparent;
+        background: linear-gradient(92deg, #ffffff 0%, var(--cyan) 34%, var(--violet) 72%, var(--pink) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .subline {
+        max-width: 850px;
+        margin-top: 34px;
+        color: var(--muted);
+        font-size: 45px;
+        line-height: 1.28;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+      }
+
+      .dashboard {
+        display: grid;
+        gap: 22px;
+        margin-top: 54px;
+      }
+
+      .cards-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .cards-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .glass-card {
+        position: relative;
+        min-height: 172px;
+        padding: 28px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 34px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(22px);
+      }
+
+      .glass-card::after {
+        content: "";
+        position: absolute;
+        inset: auto -20% -50% 20%;
+        height: 100px;
+        background: radial-gradient(circle, rgba(77, 231, 255, 0.28), transparent 68%);
+      }
+
+      .card-label {
+        display: block;
+        color: var(--muted);
+        font-size: 25px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .card-value {
+        display: block;
+        margin-top: 18px;
+        color: var(--text);
+        font-size: 54px;
+        line-height: 1.06;
+        font-weight: 1000;
+        letter-spacing: -0.055em;
+      }
+
+      .card-desc {
+        display: block;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 31px;
+        line-height: 1.18;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 42px;
+      }
+
+      .metric {
+        padding: 22px 16px;
+        border: 1px solid rgba(77, 231, 255, 0.34);
+        border-radius: 26px;
+        text-align: center;
+        background: rgba(77, 231, 255, 0.08);
+      }
+
+      .metric strong {
+        display: block;
+        color: var(--cyan);
+        font-size: 48px;
+        line-height: 1;
+        font-weight: 1000;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 25px;
+        line-height: 1.1;
+        font-weight: 800;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 26px;
+        margin-top: 54px;
+      }
+
+      .panel-title {
+        margin-bottom: 22px;
+        font-size: 38px;
+        line-height: 1;
+        font-weight: 1000;
+        letter-spacing: -0.04em;
+      }
+
+      .chaos {
+        border-color: rgba(255, 79, 216, 0.36);
+        background: linear-gradient(145deg, rgba(255, 79, 216, 0.14), rgba(255, 255, 255, 0.05));
+      }
+
+      .system {
+        border-color: rgba(87, 255, 199, 0.42);
+        background: linear-gradient(145deg, rgba(87, 255, 199, 0.14), rgba(255, 255, 255, 0.05));
+      }
+
+      .list {
+        display: grid;
+        gap: 16px;
+      }
+
+      .list span {
+        display: flex;
+        align-items: center;
+        min-height: 58px;
+        padding: 14px 18px;
+        border-radius: 18px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 31px;
+        line-height: 1.1;
+        font-weight: 850;
+        letter-spacing: -0.035em;
+      }
+
+      .logo-lockup {
+        display: grid;
+        justify-items: center;
+        gap: 34px;
+        text-align: center;
+      }
+
+      .logo-orb {
+        display: grid;
+        width: 198px;
+        height: 198px;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        border-radius: 58px;
+        color: #05101f;
+        background:
+          radial-gradient(circle at 26% 20%, #ffffff 0 12%, transparent 13%),
+          linear-gradient(135deg, var(--cyan), var(--blue) 45%, var(--violet));
+        box-shadow: 0 0 80px rgba(77, 231, 255, 0.42), 0 28px 90px rgba(0, 0, 0, 0.42);
+        font-size: 104px;
+        line-height: 1;
+        font-weight: 1000;
+      }
+
+      .promise-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 54px;
+      }
+
+      .promise {
+        min-height: 220px;
+        padding: 30px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 32px;
+        text-align: center;
+        background: var(--glass);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(18px);
+      }
+
+      .promise strong {
+        display: block;
+        color: var(--cyan);
+        font-size: 42px;
+        line-height: 1.08;
+        font-weight: 1000;
+        letter-spacing: -0.045em;
+      }
+
+      .promise span {
+        display: block;
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 26px;
+        line-height: 1.2;
+        font-weight: 750;
+      }
+
+      .matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-top: 54px;
+      }
+
+      .service-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        min-height: 108px;
+        padding: 22px 24px;
+        border: 1px solid rgba(77, 231, 255, 0.28);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.24);
+      }
+
+      .service-icon {
+        display: grid;
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+        place-items: center;
+        border-radius: 18px;
+        color: #05101f;
+        background: linear-gradient(135deg, var(--cyan), var(--violet));
+        font-size: 30px;
+        font-weight: 1000;
+      }
+
+      .service-copy {
+        font-size: 39px;
+        line-height: 1.05;
+        font-weight: 1000;
+        letter-spacing: -0.05em;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin-top: 54px;
+      }
+
+      .flow-step {
+        position: relative;
+        display: grid;
+        grid-template-columns: 96px 1fr;
+        align-items: center;
+        gap: 22px;
+        min-height: 126px;
+        padding: 24px 28px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 32px;
+        background: linear-gradient(95deg, rgba(77, 231, 255, 0.14), rgba(155, 92, 255, 0.1));
+        overflow: hidden;
+      }
+
+      .flow-step::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        transform: translateX(-110%);
+        animation: scan 2.4s ease-in-out infinite;
+      }
+
+      .flow-num {
+        display: grid;
+        width: 76px;
+        height: 76px;
+        place-items: center;
+        border-radius: 24px;
+        color: #06101d;
+        background: var(--cyan);
+        font-size: 40px;
+        font-weight: 1000;
+      }
+
+      .flow-copy strong {
+        display: block;
+        font-size: 47px;
+        line-height: 1;
+        font-weight: 1000;
+        letter-spacing: -0.05em;
+      }
+
+      .flow-copy span {
+        display: block;
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 27px;
+        line-height: 1.2;
+        font-weight: 750;
+      }
+
+      .footer-bar {
+        position: absolute;
+        left: 74px;
+        right: 74px;
+        bottom: 72px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 22px;
+        color: var(--muted);
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      .progress {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .progress::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink));
+        transform-origin: left center;
+        animation: fill 30s linear both;
+      }
+
+      .node-field {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .node {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 24px var(--cyan);
+        opacity: 0.8;
+        animation: pulse 1.8s ease-in-out infinite alternate;
+      }
+
+      .node:nth-child(1) { top: 21%; left: 14%; animation-delay: 0s; }
+      .node:nth-child(2) { top: 16%; left: 72%; animation-delay: 0.2s; }
+      .node:nth-child(3) { top: 42%; left: 88%; animation-delay: 0.4s; }
+      .node:nth-child(4) { top: 64%; left: 12%; animation-delay: 0.6s; }
+      .node:nth-child(5) { top: 79%; left: 70%; animation-delay: 0.8s; }
+
+      .pop {
+        animation: pop-in 0.55s cubic-bezier(0.16, 1.2, 0.3, 1) both;
+      }
+
+      .rise {
+        animation: rise 0.68s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .delay-1 { animation-delay: 0.12s; }
+      .delay-2 { animation-delay: 0.24s; }
+      .delay-3 { animation-delay: 0.36s; }
+      .delay-4 { animation-delay: 0.48s; }
+      .delay-5 { animation-delay: 0.6s; }
+
+      @keyframes grid-flow {
+        from { background-position: 0 0, 0 0; }
+        to { background-position: 0 720px, 720px 0; }
+      }
+
+      @keyframes pop-in {
+        from { opacity: 0; transform: translateY(48px) scale(0.94); filter: blur(12px); }
+        to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+      }
+
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(90px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes scan {
+        0%, 38% { transform: translateX(-115%); }
+        100% { transform: translateX(115%); }
+      }
+
+      @keyframes pulse {
+        from { transform: scale(0.85); opacity: 0.45; }
+        to { transform: scale(1.6); opacity: 1; }
+      }
+
+      @keyframes fill {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="jingpian-service-provider-ad" data-width="1080" data-height="1920" data-duration="30" data-fps="30" data-bg="#060914">
+      <div class="node-field" aria-hidden="true">
+        <span class="node"></span><span class="node"></span><span class="node"></span><span class="node"></span><span class="node"></span>
+      </div>
+
+      <section id="scene-1" class="clip scene" data-start="0" data-duration="3" data-track-index="0" data-track="hook" data-fade="out">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>鲸片剪辑</span><span class="status-chip">WHITE LABEL CAPACITY</span></div>
+        <div class="kicker pop">服务团队 / IP孵化 / 知识内容</div>
+        <h1 class="headline large pop delay-1">手里有客户，<br /><span class="gradient-text">缺剪辑产能？</span></h1>
+        <p class="subline pop delay-2">做短视频服务的老板，客户在增加，但视频交付跟不上。</p>
+        <div class="metric-row rise delay-3">
+          <div class="metric"><strong>客户</strong><span>需求持续进来</span></div>
+          <div class="metric"><strong>剪辑</strong><span>交付压力上升</span></div>
+          <div class="metric"><strong>标准</strong><span>需要统一稳定</span></div>
+        </div>
+      </section>
+
+      <section id="scene-2" class="clip scene" data-start="3" data-duration="5" data-track-index="1" data-track="pain-points" data-fade="both">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>项目压力面板</span><span class="status-chip">DELIVERY BOTTLENECK</span></div>
+        <div class="kicker pop">客户越多，交付越乱</div>
+        <h2 class="headline compact pop delay-1">需求杂、修改多、交付慢，<br /><span class="gradient-text">团队容易被拖垮</span></h2>
+        <div class="dashboard cards-2 rise delay-2">
+          <div class="glass-card"><span class="card-label">Order 01</span><span class="card-value">口播视频</span><span class="card-desc">节奏、字幕、包装都要统一</span></div>
+          <div class="glass-card"><span class="card-label">Order 02</span><span class="card-value">信息流素材</span><span class="card-desc">多版本、多比例、多批次</span></div>
+          <div class="glass-card"><span class="card-label">Order 03</span><span class="card-value">知识内容</span><span class="card-desc">逻辑清楚，画面不掉质感</span></div>
+          <div class="glass-card"><span class="card-label">Order 04</span><span class="card-value">IP短视频</span><span class="card-desc">稳定风格，持续交付</span></div>
+        </div>
+      </section>
+
+      <section id="scene-3" class="clip scene" data-start="8" data-duration="4" data-track-index="2" data-track="comparison" data-fade="both">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>交付系统</span><span class="status-chip">FROM CHAOS TO SYSTEM</span></div>
+        <div class="kicker pop">别让剪辑卡住业务</div>
+        <h2 class="headline compact pop delay-1">你缺的不是一个剪辑师，<br /><span class="gradient-text">是一套稳定产能</span></h2>
+        <div class="split rise delay-2">
+          <div class="glass-card chaos">
+            <div class="panel-title">混乱交付</div>
+            <div class="list"><span>临时找人</span><span>标准不统一</span><span>修改来回拉扯</span></div>
+          </div>
+          <div class="glass-card system">
+            <div class="panel-title">流程化交付</div>
+            <div class="list"><span>固定对接</span><span>标准先确认</span><span>批量稳定输出</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-4" class="clip scene" data-start="12" data-duration="5" data-track-index="3" data-track="brand-capacity" data-fade="both">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>鲸片剪辑</span><span class="status-chip">BACKSTAGE DELIVERY</span></div>
+        <div class="logo-lockup pop">
+          <div class="logo-orb">鲸</div>
+          <h2 class="headline large"><span class="gradient-text">鲸片剪辑</span></h2>
+          <p class="subline">为短视频服务商提供白标剪辑产能支持，只做幕后视频剪辑交付。</p>
+        </div>
+        <div class="promise-grid rise delay-2">
+          <div class="promise"><strong>不露品牌</strong><span>按你的交付关系服务客户</span></div>
+          <div class="promise"><strong>不抢客户</strong><span>专注幕后执行与剪辑产能</span></div>
+          <div class="promise"><strong>只做交付</strong><span>把视频剪辑和素材做稳</span></div>
+        </div>
+      </section>
+
+      <section id="scene-5" class="clip scene" data-start="17" data-duration="4" data-track-index="4" data-track="service-matrix" data-fade="both">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>服务矩阵</span><span class="status-chip">BATCH PRODUCTION</span></div>
+        <div class="kicker pop">多类型视频，批量承接</div>
+        <h2 class="headline compact pop delay-1">从素材制作到剪辑交付，<br /><span class="gradient-text">都可以标准化推进</span></h2>
+        <div class="matrix rise delay-2">
+          <div class="service-item"><span class="service-icon">01</span><span class="service-copy">口播剪辑</span></div>
+          <div class="service-item"><span class="service-icon">02</span><span class="service-copy">信息流素材</span></div>
+          <div class="service-item"><span class="service-icon">03</span><span class="service-copy">直播切片</span></div>
+          <div class="service-item"><span class="service-icon">04</span><span class="service-copy">知识内容</span></div>
+          <div class="service-item"><span class="service-icon">05</span><span class="service-copy">商业短视频</span></div>
+          <div class="service-item"><span class="service-icon">06</span><span class="service-copy">批量交付</span></div>
+        </div>
+      </section>
+
+      <section id="scene-6" class="clip scene" data-start="21" data-duration="4" data-track-index="5" data-track="workflow" data-fade="both">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>合作流程</span><span class="status-chip">TRIAL FIRST</span></div>
+        <div class="kicker pop">先试剪，再合作</div>
+        <h2 class="headline compact pop delay-1">合作不复杂：<br /><span class="gradient-text">先确认标准，再长期配合</span></h2>
+        <div class="flow rise delay-2">
+          <div class="flow-step"><span class="flow-num">1</span><span class="flow-copy"><strong>先试剪一条</strong><span>拿真实素材验证节奏、质感和效率</span></span></div>
+          <div class="flow-step"><span class="flow-num">2</span><span class="flow-copy"><strong>确认风格标准</strong><span>字幕、包装、修改口径统一后再放量</span></span></div>
+          <div class="flow-step"><span class="flow-num">3</span><span class="flow-copy"><strong>满意后批量交付</strong><span>按项目节奏持续输出视频物料</span></span></div>
+        </div>
+      </section>
+
+      <section id="scene-7" class="clip scene" data-start="25" data-duration="3" data-track-index="6" data-track="advantages" data-fade="both">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>产能后台</span><span class="status-chip">STABLE OUTPUT</span></div>
+        <div class="kicker pop">稳定产能，标准流程</div>
+        <h2 class="headline compact pop delay-1">有剪辑师池，<br />有主管对接，<br /><span class="gradient-text">有流程管理</span></h2>
+        <div class="dashboard cards-3 rise delay-2">
+          <div class="glass-card"><span class="card-label">Team</span><span class="card-value">剪辑师池</span><span class="card-desc">按项目调配</span></div>
+          <div class="glass-card"><span class="card-label">PM</span><span class="card-value">主管对接</span><span class="card-desc">减少沟通损耗</span></div>
+          <div class="glass-card"><span class="card-label">SOP</span><span class="card-value">流程管理</span><span class="card-desc">交付更可控</span></div>
+        </div>
+      </section>
+
+      <section id="scene-8" class="clip scene" data-start="28" data-duration="2" data-track-index="7" data-track="final-cta" data-fade="in">
+        <div class="scene-top"><span class="brand-chip"><span class="brand-mark">鲸</span>鲸片剪辑</span><span class="status-chip">VIDEO DELIVERY PARTNER</span></div>
+        <div class="logo-lockup pop">
+          <div class="logo-orb">鲸</div>
+          <h2 class="headline large">视频交付<br /><span class="gradient-text">找鲸片剪辑</span></h2>
+          <p class="subline">手里有客户，需要剪辑交付支持，先试剪满意再合作。</p>
+        </div>
+      </section>
+
+      <div class="footer-bar" aria-hidden="true"><span>00:00</span><span class="progress"></span><span>00:30</span></div>
+    </div>
+  </body>
+</html>
