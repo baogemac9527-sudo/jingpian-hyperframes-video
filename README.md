@@ -18,6 +18,7 @@
 
 - **创意内容**：以 PR #2 的 30 秒服务商白标剪辑产能广告片为准。
 - **项目结构**：保留 main 分支已验证的 Node.js + HyperFrames 根目录结构，继续使用 `index.html`、`package.json`、`scripts/setup.sh`、`.gitignore` 与 `README.md`。
+- **冲突处理**：`README.md`、`index.html`、`package.json`、`scripts/setup.sh` 均采用 30 秒服务商广告片内容，并删除所有 Git conflict markers。
 - **运行命令**：保留 `npm run preview`、`npm run lint`、`npm run snapshot`、`npm run render`，其中 `npm run render` 输出新版 30 秒广告 MP4。
 
 ## 30 秒分镜结构
