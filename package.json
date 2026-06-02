@@ -1,0 +1,29 @@
+{
+  "name": "jingpian-hyperframes-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "9:16 HyperFrames demo ad video for Jingpian: 剪视频，找鲸片.",
+  "type": "module",
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "doctor": "hyperframes doctor",
+    "preview": "hyperframes preview . --port 3002",
+    "lint": "hyperframes lint . --json",
+    "snapshot": "mkdir -p snapshots && hyperframes snapshot . --at 0.5,2.1,4.2,6.8",
+    "render": "mkdir -p dist && hyperframes render --output dist/jingpian-hyperframes-demo.mp4 --fps 30 --quality high"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "hyperframes": "^0.4.44"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "hyperframes",
+    "video",
+    "html-to-video",
+    "jingpian",
+    "douyin"
+  ]
+}
