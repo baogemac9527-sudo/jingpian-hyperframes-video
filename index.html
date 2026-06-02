@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>剪视频，找鲸片｜9:16 HyperFrames Demo</title>
+    <style>
+      :root {
+        --ink: #101010;
+        --cream: #fff7d6;
+        --yellow: #ffdf00;
+        --blue: #1b54ff;
+        --pink: #ff3f8f;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--ink);
+        font-family: "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        color: var(--white);
+        background: var(--yellow);
+        isolation: isolate;
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        padding: 108px 82px;
+        text-align: center;
+      }
+
+      .slide::before {
+        content: "";
+        position: absolute;
+        inset: 62px;
+        border: 20px solid currentColor;
+        pointer-events: none;
+      }
+
+      .yellow {
+        color: var(--ink);
+        background: var(--yellow);
+      }
+
+      .blue {
+        color: var(--white);
+        background: var(--blue);
+      }
+
+      .pink {
+        color: var(--white);
+        background: var(--pink);
+      }
+
+      .cream {
+        color: var(--ink);
+        background: var(--cream);
+      }
+
+      .tag {
+        position: absolute;
+        top: 104px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-2deg);
+        padding: 20px 34px;
+        border: 10px solid currentColor;
+        border-radius: 999px;
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        background: rgba(255, 255, 255, 0.18);
+        white-space: nowrap;
+      }
+
+      .headline {
+        margin: 0;
+        font-size: 168px;
+        line-height: 0.95;
+        font-weight: 1000;
+        letter-spacing: -0.07em;
+        text-transform: uppercase;
+        text-wrap: balance;
+      }
+
+      .headline .stroke {
+        display: block;
+        margin-top: 18px;
+        color: transparent;
+        -webkit-text-stroke: 11px currentColor;
+        text-shadow: none;
+      }
+
+      .headline.small {
+        font-size: 132px;
+        letter-spacing: -0.055em;
+      }
+
+      .subline {
+        max-width: 860px;
+        margin: 54px 0 0;
+        font-size: 60px;
+        line-height: 1.18;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+      }
+
+      .stack {
+        display: grid;
+        gap: 28px;
+        width: min(860px, 100%);
+        margin-top: 72px;
+      }
+
+      .pill {
+        display: block;
+        padding: 34px 44px;
+        border: 12px solid currentColor;
+        font-size: 68px;
+        line-height: 1;
+        font-weight: 1000;
+        letter-spacing: -0.045em;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 18px 18px 0 currentColor;
+      }
+
+      .cream .pill {
+        background: var(--white);
+        box-shadow: 18px 18px 0 var(--ink);
+      }
+
+      .footer {
+        position: absolute;
+        right: 82px;
+        bottom: 92px;
+        left: 82px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        border-top: 10px solid currentColor;
+        padding-top: 28px;
+        font-size: 42px;
+        line-height: 1.1;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .whale {
+        display: grid;
+        width: 96px;
+        height: 96px;
+        place-items: center;
+        border: 10px solid currentColor;
+        border-radius: 50%;
+        font-size: 52px;
+        line-height: 1;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .burst {
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        border: 18px solid currentColor;
+        transform: rotate(18deg);
+        opacity: 0.18;
+      }
+
+      .burst.one {
+        top: 235px;
+        right: -92px;
+      }
+
+      .burst.two {
+        bottom: 290px;
+        left: -126px;
+        border-radius: 50%;
+      }
+
+      .meter {
+        position: absolute;
+        right: 82px;
+        bottom: 228px;
+        left: 82px;
+        height: 26px;
+        border: 8px solid currentColor;
+        background: rgba(255, 255, 255, 0.28);
+      }
+
+      .meter::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: currentColor;
+        transform-origin: left center;
+        animation: fill 8s linear both;
+      }
+
+      .pop {
+        animation: pop-in 0.46s cubic-bezier(0.16, 1.2, 0.3, 1) both;
+      }
+
+      .slam {
+        animation: slam 0.42s cubic-bezier(0.1, 1.15, 0.25, 1) both;
+      }
+
+      .float {
+        animation: floaty 1.4s ease-in-out infinite alternate;
+      }
+
+      @keyframes pop-in {
+        from {
+          opacity: 0;
+          transform: translateY(70px) scale(0.92) rotate(-2deg);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+      }
+
+      @keyframes slam {
+        from {
+          opacity: 0;
+          transform: translateY(-95px) scale(1.18) rotate(2deg);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+      }
+
+      @keyframes floaty {
+        from {
+          transform: translateY(-12px) rotate(-2deg);
+        }
+        to {
+          transform: translateY(12px) rotate(2deg);
+        }
+      }
+
+      @keyframes fill {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="jingpian-ad" data-width="1080" data-height="1920" data-duration="8" data-fps="30" data-bg="#ffdf00">
+      <section id="scene-1" class="clip slide yellow" data-start="0" data-duration="2" data-track-index="0" data-track="opening-hook" data-fade="out">
+        <div class="burst one"></div>
+        <div class="burst two"></div>
+        <div class="tag slam">短视频素材太赶？</div>
+        <h1 class="headline pop">剪视频<br />找鲸片</h1>
+        <p class="subline pop">竖屏广告｜信息流物料｜快速出片</p>
+        <div class="footer"><span class="brand"><span class="whale">鲸</span>鲸片</span><span>9:16 DEMO</span></div>
+      </section>
+
+      <section id="scene-2" class="clip slide blue" data-start="2" data-duration="2" data-track-index="1" data-track="services" data-fade="both">
+        <div class="tag slam">只说交付，不吹承诺</div>
+        <h2 class="headline small pop">视频剪辑<br />素材制作</h2>
+        <div class="stack">
+          <span class="pill pop">口播 / 混剪 / 包装</span>
+          <span class="pill pop">封面 / 字幕 / 节奏点</span>
+        </div>
+      </section>
+
+      <section id="scene-3" class="clip slide pink" data-start="4" data-duration="2" data-track-index="2" data-track="batch-delivery" data-fade="both">
+        <div class="burst one float"></div>
+        <div class="tag slam">简单粗暴，适合抖音信息流</div>
+        <h2 class="headline small pop">批量交付<br />大字高识别</h2>
+        <p class="subline pop">纯色背景 + 强对比排版<br />让卖点一眼看见</p>
+      </section>
+
+      <section id="scene-4" class="clip slide cream" data-start="6" data-duration="2" data-track-index="3" data-track="trial-close" data-fade="in">
+        <div class="tag slam">先试剪满意再合作</div>
+        <h2 class="headline pop">剪视频<br />找鲸片</h2>
+        <div class="stack">
+          <span class="pill pop">先看样片</span>
+          <span class="pill pop">确认风格</span>
+          <span class="pill pop">再批量做</span>
+        </div>
+        <div class="meter" aria-hidden="true"></div>
+        <div class="footer"><span class="brand"><span class="whale">鲸</span>鲸片视频剪辑</span><span>试剪 → 合作</span></div>
+      </section>
+    </div>
+  </body>
+</html>
