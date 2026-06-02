@@ -7,11 +7,12 @@
 - **主题**：服务商手里有客户，视频交付找鲸片。
 - **比例**：9:16 竖屏，`1080 × 1920`
 - **时长**：30 秒，30 FPS
-- **输出文件**：`dist/jingpian-service-provider-ad.mp4`
+- **无声视频输出**：`dist/jingpian-service-provider-ad.mp4`
+- **最终带配音输出**：`dist/jingpian-service-provider-ad-final.mp4`
 - **目标受众**：短视频服务商、IP 孵化团队、知识内容团队，以及手里有客户但缺剪辑交付产能的团队。
 - **核心表达**：鲸片剪辑为短视频服务商提供白标剪辑交付支持，不露品牌，不抢客户，只做幕后视频剪辑产能支持。
 - **风格**：科技感、高级感、商业感；深色背景、蓝紫渐变、数据流、玻璃拟态卡片、大字高识别。
-- **声音**：通过浏览器 `speechSynthesis` 选择中文人声朗读每个分镜文案；预览或渲染环境需要提供可用的 `zh-CN` 系统语音。
+- **声音**：使用 OpenAI Speech API 根据 `scripts/voiceover.txt` 生成 `assets/voiceover.mp3`，再用 FFmpeg 合成为最终带配音视频。
 - **文案边界**：只突出「视频剪辑、素材制作、批量交付、白标产能支持、先试剪满意再合作」，不写超出视频剪辑交付范围的服务表达。
 
 ## 30 秒分镜
@@ -27,21 +28,40 @@
 | 25-28 秒 | 先试剪一条，确认标准，满意后长期合作。 |
 | 28-30 秒 | 视频交付，找鲸片剪辑。 |
 
-## 配音说明
+## OpenAI TTS 配音说明
 
-当前 Codex 环境没有可用的真人配音 / TTS skill，也无法通过受限网络安装或调用外部 TTS 包。因此项目在 `index.html` 内置了 Web Speech API 旁白脚本：优先选择 `zh-CN` 中文人声，按 0s、3s、7s、11s、16s、21s、25s、28s 的分镜时间自动朗读对应文案。
+项目新增了 OpenAI TTS 配音生成与 FFmpeg 音频合成功能：
 
-如果渲染机器没有中文系统语音，请先安装中文语音包，或把专业真人录音文件放入项目后，将 `index.html` 中的 Web Speech 旁白替换为 HyperFrames 支持的 `<audio src="..." />` 音轨。
+- `scripts/voiceover.txt`：30 秒广告片旁白文案。
+- `scripts/generate-voiceover.js`：读取 `OPENAI_API_KEY`，调用 OpenAI Speech API 生成 `assets/voiceover.mp3`。
+- `scripts/mix-audio.sh`：用 FFmpeg 将 `dist/jingpian-service-provider-ad.mp4` 与 `assets/voiceover.mp3` 合成为 `dist/jingpian-service-provider-ad-final.mp4`。
+
+> API Key 只从环境变量 `OPENAI_API_KEY` 读取，不会写入代码或 README。OpenAI TTS 为 AI 生成语音，对外发布时请按使用场景清晰披露语音为 AI 生成。
+
+默认 TTS 参数：
+
+- 模型：`gpt-4o-mini-tts`
+- 声音：`marin`
+- 输出格式：MP3
+
+如需调整，可在命令前设置环境变量：
+
+```bash
+OPENAI_TTS_MODEL="gpt-4o-mini-tts" OPENAI_TTS_VOICE="cedar" npm run generate-voiceover
+```
 
 ## 项目结构
 
 ```text
 .
-├── index.html        # HyperFrames 30 秒 9:16 竖屏广告视频时间线
-├── package.json      # Node.js scripts 与 HyperFrames 依赖
+├── index.html                  # HyperFrames 30 秒 9:16 竖屏广告视频时间线
+├── package.json                # Node.js scripts 与 HyperFrames 依赖
 ├── scripts/
-│   └── setup.sh      # 自动检查 Node、安装 FFmpeg/字体、安装 npm 依赖
-└── README.md         # 使用说明
+│   ├── generate-voiceover.js   # 调用 OpenAI Speech API 生成旁白 MP3
+│   ├── mix-audio.sh            # 用 FFmpeg 合成视频与旁白音频
+│   ├── setup.sh                # 自动检查 Node、安装 FFmpeg/字体、安装 npm 依赖
+│   └── voiceover.txt           # 30 秒广告片旁白文案
+└── README.md                   # 使用说明
 ```
 
 ## 环境要求
@@ -50,6 +70,7 @@
 - npm
 - FFmpeg `>= 6`（`npm run setup` 会在支持的 Linux 包管理器中自动安装）
 - 中文字体（`npm run setup` 会尝试安装 Noto CJK 字体，避免中文渲染缺字）
+- OpenAI API Key（仅生成配音时需要，通过 `OPENAI_API_KEY` 环境变量提供）
 
 ## 初始化 / 补齐依赖
 
@@ -93,6 +114,57 @@ npm run render
 ```text
 dist/jingpian-service-provider-ad.mp4
 ```
+
+
+## 生成 OpenAI TTS 配音
+
+先配置 API Key：
+
+```bash
+export OPENAI_API_KEY="你的 OpenAI API Key"
+```
+
+然后生成旁白 MP3：
+
+```bash
+npm run generate-voiceover
+```
+
+输出文件：
+
+```text
+assets/voiceover.mp3
+```
+
+如果没有配置 `OPENAI_API_KEY`，脚本会明确提示先配置环境变量并退出。
+
+## 合成最终带声音视频
+
+先保持现有渲染流程不变，生成无声视频：
+
+```bash
+npm run render
+```
+
+再将 OpenAI TTS 旁白合成进去：
+
+```bash
+npm run mix-audio
+```
+
+最终带配音视频会输出到：
+
+```text
+dist/jingpian-service-provider-ad-final.mp4
+```
+
+也可以在已经存在 `dist/jingpian-service-provider-ad.mp4` 的情况下，一条命令先生成配音、再合成最终视频：
+
+```bash
+npm run final
+```
+
+> `npm run final` 不会重新渲染画面；它会先执行 `npm run generate-voiceover`，再执行 `npm run mix-audio`。如果缺少 `dist/jingpian-service-provider-ad.mp4`，请先运行 `npm run render`。
 
 ## 截取关键帧
 

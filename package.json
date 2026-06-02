@@ -2,7 +2,7 @@
   "name": "jingpian-hyperframes-video",
   "version": "1.0.0",
   "private": true,
-  "description": "30-second 9:16 HyperFrames ad for Jingpian white-label editing capacity support with zh-CN voiceover.",
+  "description": "30-second 9:16 HyperFrames ad for Jingpian white-label editing capacity support with OpenAI TTS voiceover.",
   "type": "module",
   "scripts": {
     "setup": "bash scripts/setup.sh",
@@ -10,7 +10,10 @@
     "preview": "hyperframes preview . --port 3002",
     "lint": "hyperframes lint . --json",
     "snapshot": "mkdir -p snapshots && hyperframes snapshot . --at 1.5,5,9,13.5,18.5,23,26.5,29",
-    "render": "mkdir -p dist && hyperframes render --output dist/jingpian-service-provider-ad.mp4 --fps 30 --quality high"
+    "render": "mkdir -p dist && hyperframes render --output dist/jingpian-service-provider-ad.mp4 --fps 30 --quality high",
+    "generate-voiceover": "node scripts/generate-voiceover.js",
+    "mix-audio": "bash scripts/mix-audio.sh",
+    "final": "npm run generate-voiceover && npm run mix-audio"
   },
   "engines": {
     "node": ">=22"

@@ -17,7 +17,6 @@
         --magenta: #ff4fd8;
         --white: #ffffff;
         --muted: #b7c6ff;
-        --voice: #9df6ff;
       }
 
       * {
@@ -259,35 +258,6 @@
         letter-spacing: 0.02em;
       }
 
-      .voice-badge {
-        position: absolute;
-        top: 98px;
-        right: 82px;
-        z-index: 3;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px 20px;
-        border: 1px solid rgba(157, 246, 255, 0.42);
-        border-radius: 999px;
-        color: var(--voice);
-        background: rgba(5, 12, 30, 0.58);
-        box-shadow: 0 0 34px rgba(66, 232, 255, 0.16);
-        font-size: 24px;
-        font-weight: 900;
-        letter-spacing: 0.06em;
-      }
-
-      .voice-badge::before {
-        content: "";
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--voice);
-        box-shadow: 0 0 18px var(--voice);
-        animation: pulse 1.2s ease-in-out infinite;
-      }
-
       .progress {
         width: 320px;
         height: 8px;
@@ -413,17 +383,6 @@
         }
       }
 
-      @keyframes pulse {
-        0%, 100% {
-          transform: scale(0.78);
-          opacity: 0.52;
-        }
-        50% {
-          transform: scale(1.2);
-          opacity: 1;
-        }
-      }
-
       @keyframes fill {
         from {
           transform: scaleX(0);
@@ -438,7 +397,6 @@
     <div id="root" data-composition-id="jingpian-service-provider-ad" data-width="1080" data-height="1920" data-duration="30" data-fps="30" data-bg="#050711">
       <div class="ambient" aria-hidden="true"></div>
       <div class="scanline" aria-hidden="true"></div>
-      <div class="voice-badge" aria-hidden="true">ZH-CN VOICEOVER</div>
 
       <section id="scene-1" class="clip slide" data-start="0" data-duration="3" data-track-index="0" data-track="opening-hook" data-fade="out">
         <div class="content">
@@ -529,62 +487,5 @@
         <div class="footer"><span>28—30s / SERVICE PROVIDER AD</span><span class="progress"></span></div>
       </section>
     </div>
-
-    <script>
-      const narration = [
-        { at: 0, text: "做短视频服务的老板，手里有客户，但剪辑交付跟不上？" },
-        { at: 3, text: "客户越多，需求越杂，修改越多，交付节奏越容易乱。" },
-        { at: 7, text: "服务商真正缺的，不只是剪辑师，而是一套稳定的视频交付产能。" },
-        { at: 11, text: "鲸片剪辑，为短视频服务商提供白标剪辑产能支持。" },
-        { at: 16, text: "不露品牌，不抢客户，只做你背后的视频剪辑交付产能。" },
-        { at: 21, text: "口播视频，信息流素材，直播切片，知识内容，商业短视频，都可以批量承接。" },
-        { at: 25, text: "先试剪一条，确认标准，满意后长期合作。" },
-        { at: 28, text: "视频交付，找鲸片剪辑。" },
-      ];
-
-      function selectChineseVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        return (
-          voices.find((voice) => voice.lang === "zh-CN" && /female|xiaoxiao|xiaoyi|tingting|huihui|hanhan|meijia/i.test(voice.name)) ||
-          voices.find((voice) => voice.lang === "zh-CN") ||
-          voices.find((voice) => voice.lang.startsWith("zh")) ||
-          null
-        );
-      }
-
-      function speakLine(line) {
-        const utterance = new SpeechSynthesisUtterance(line.text);
-        const voice = selectChineseVoice();
-        if (voice) {
-          utterance.voice = voice;
-          utterance.lang = voice.lang;
-        } else {
-          utterance.lang = "zh-CN";
-        }
-        utterance.rate = 1.03;
-        utterance.pitch = 1.02;
-        utterance.volume = 1;
-        window.speechSynthesis.speak(utterance);
-      }
-
-      function startVoiceover() {
-        if (!window.speechSynthesis || window.__jingpianVoiceoverStarted) {
-          return;
-        }
-        window.__jingpianVoiceoverStarted = true;
-        window.speechSynthesis.cancel();
-        narration.forEach((line) => {
-          window.setTimeout(() => speakLine(line), line.at * 1000);
-        });
-      }
-
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          selectChineseVoice();
-        };
-        window.setTimeout(startVoiceover, 180);
-        document.addEventListener("click", startVoiceover, { once: true });
-      }
-    </script>
   </body>
 </html>
