@@ -14,6 +14,13 @@
 - **文案边界**：只突出「视频剪辑、素材制作、批量交付、白标产能支持、先试剪满意再合作」，不出现涨粉、获客、投放效果、账号托管等承诺类表达
 - **音乐建议**：科技感、低频、节奏感强的背景音乐；当前仓库不内置音乐素材，避免版权风险
 
+
+## 当前合并口径
+
+- **创意内容**：以 PR #2 的 30 秒服务商白标剪辑产能广告片为准。
+- **项目结构**：保留 main 分支已验证的 Node.js + HyperFrames 根目录结构，继续使用 `index.html`、`package.json`、`scripts/setup.sh`、`.gitignore` 与 `README.md`。
+- **运行命令**：保留 `npm run preview`、`npm run lint`、`npm run snapshot`、`npm run render`，其中 `npm run render` 输出新版 30 秒广告 MP4。
+
 ## 30 秒分镜结构
 
 | 时间 | 画面重点 | 屏幕大字 |
