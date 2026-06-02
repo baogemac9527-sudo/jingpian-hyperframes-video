@@ -52,7 +52,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        z-index: -2;
+        z-index: 0;
         background:
           linear-gradient(var(--line) 1px, transparent 1px),
           linear-gradient(90deg, var(--line) 1px, transparent 1px);
@@ -67,7 +67,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        z-index: -1;
+        z-index: 0;
         background:
           repeating-linear-gradient(90deg, transparent 0 44px, rgba(77, 231, 255, 0.06) 45px 47px, transparent 48px 96px),
           linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 22%, rgba(0, 0, 0, 0.34));
@@ -78,6 +78,7 @@
       .clip {
         position: absolute;
         inset: 0;
+        z-index: 1;
       }
 
       .scene {
@@ -486,6 +487,7 @@
 
       .footer-bar {
         position: absolute;
+        z-index: 2;
         left: 74px;
         right: 74px;
         bottom: 72px;
@@ -520,6 +522,7 @@
       .node-field {
         position: absolute;
         inset: 0;
+        z-index: 1;
         pointer-events: none;
       }
 
