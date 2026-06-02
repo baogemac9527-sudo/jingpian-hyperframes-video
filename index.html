@@ -3,15 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>剪视频，找鲸片｜9:16 HyperFrames Demo</title>
+    <title>视频交付，找鲸片剪辑｜服务商白标剪辑产能支持</title>
     <style>
       :root {
-        --ink: #101010;
-        --cream: #fff7d6;
-        --yellow: #ffdf00;
-        --blue: #1b54ff;
-        --pink: #ff3f8f;
+        --bg: #050711;
+        --bg-2: #080b1f;
+        --card: rgba(255, 255, 255, 0.1);
+        --card-strong: rgba(255, 255, 255, 0.16);
+        --line: rgba(160, 190, 255, 0.26);
+        --cyan: #42e8ff;
+        --blue: #2d6bff;
+        --violet: #8d5cff;
+        --magenta: #ff4fd8;
         --white: #ffffff;
+        --muted: #b7c6ff;
+        --voice: #9df6ff;
       }
 
       * {
@@ -24,7 +30,7 @@
         height: 100%;
         margin: 0;
         overflow: hidden;
-        background: var(--ink);
+        background: var(--bg);
         font-family: "Noto Sans CJK SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
       }
 
@@ -34,8 +40,47 @@
         height: 1920px;
         overflow: hidden;
         color: var(--white);
-        background: var(--yellow);
+        background:
+          radial-gradient(circle at 18% 12%, rgba(66, 232, 255, 0.28), transparent 32%),
+          radial-gradient(circle at 82% 24%, rgba(141, 92, 255, 0.36), transparent 34%),
+          radial-gradient(circle at 52% 88%, rgba(255, 79, 216, 0.22), transparent 35%),
+          linear-gradient(160deg, #050711 0%, #071330 48%, #120821 100%);
         isolation: isolate;
+      }
+
+      #root::before,
+      #root::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+      }
+
+      #root::before {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+        background-size: 90px 90px;
+        mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 86%, transparent 100%);
+      }
+
+      #root::after {
+        background:
+          repeating-linear-gradient(90deg, transparent 0 68px, rgba(66, 232, 255, 0.09) 68px 70px, transparent 70px 126px),
+          repeating-linear-gradient(180deg, transparent 0 110px, rgba(141, 92, 255, 0.1) 110px 113px, transparent 113px 210px);
+        animation: data-flow 8s linear infinite;
+        opacity: 0.72;
+      }
+
+      .ambient {
+        position: absolute;
+        inset: -220px;
+        z-index: -1;
+        background:
+          conic-gradient(from 130deg at 50% 50%, rgba(66, 232, 255, 0.18), transparent, rgba(141, 92, 255, 0.28), transparent, rgba(255, 79, 216, 0.16), rgba(66, 232, 255, 0.18));
+        filter: blur(44px);
+        animation: rotate-glow 14s linear infinite;
       }
 
       .slide {
@@ -44,224 +89,338 @@
         display: grid;
         align-content: center;
         justify-items: center;
-        padding: 108px 82px;
+        padding: 120px 72px 132px;
         text-align: center;
       }
 
       .slide::before {
         content: "";
         position: absolute;
-        inset: 62px;
-        border: 20px solid currentColor;
-        pointer-events: none;
+        inset: 78px 58px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 46px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018));
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+          0 34px 110px rgba(0, 0, 0, 0.34);
+        backdrop-filter: blur(16px);
       }
 
-      .yellow {
-        color: var(--ink);
-        background: var(--yellow);
+      .content {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        justify-items: center;
+        width: 100%;
+        max-width: 920px;
       }
 
-      .blue {
-        color: var(--white);
-        background: var(--blue);
-      }
-
-      .pink {
-        color: var(--white);
-        background: var(--pink);
-      }
-
-      .cream {
-        color: var(--ink);
-        background: var(--cream);
-      }
-
-      .tag {
-        position: absolute;
-        top: 104px;
-        left: 50%;
-        transform: translateX(-50%) rotate(-2deg);
-        padding: 20px 34px;
-        border: 10px solid currentColor;
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 44px;
+        padding: 18px 28px;
+        border: 1px solid rgba(255, 255, 255, 0.32);
         border-radius: 999px;
-        font-size: 42px;
+        color: var(--cyan);
+        background: rgba(10, 18, 44, 0.58);
+        box-shadow: 0 0 34px rgba(66, 232, 255, 0.18);
+        font-size: 34px;
+        line-height: 1;
         font-weight: 900;
         letter-spacing: 0.08em;
-        background: rgba(255, 255, 255, 0.18);
-        white-space: nowrap;
+      }
+
+      .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 20px var(--cyan);
       }
 
       .headline {
         margin: 0;
-        font-size: 168px;
-        line-height: 0.95;
+        font-size: 112px;
+        line-height: 1.04;
         font-weight: 1000;
-        letter-spacing: -0.07em;
-        text-transform: uppercase;
+        letter-spacing: -0.065em;
         text-wrap: balance;
+        text-shadow: 0 0 48px rgba(45, 107, 255, 0.34);
       }
 
-      .headline .stroke {
-        display: block;
-        margin-top: 18px;
+      .headline.large {
+        font-size: 126px;
+      }
+
+      .headline .accent {
+        display: inline-block;
         color: transparent;
-        -webkit-text-stroke: 11px currentColor;
-        text-shadow: none;
-      }
-
-      .headline.small {
-        font-size: 132px;
-        letter-spacing: -0.055em;
+        background: linear-gradient(90deg, var(--cyan), var(--violet), var(--magenta));
+        -webkit-background-clip: text;
+        background-clip: text;
       }
 
       .subline {
-        max-width: 860px;
-        margin: 54px 0 0;
-        font-size: 60px;
+        max-width: 880px;
+        margin: 36px 0 0;
+        color: #dce5ff;
+        font-size: 48px;
+        line-height: 1.28;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+      }
+
+      .emphasis {
+        margin-top: 42px;
+        padding: 30px 36px;
+        border: 1px solid rgba(66, 232, 255, 0.42);
+        border-radius: 28px;
+        color: var(--white);
+        background: linear-gradient(135deg, rgba(66, 232, 255, 0.16), rgba(141, 92, 255, 0.16));
+        box-shadow: 0 0 58px rgba(66, 232, 255, 0.16);
+        font-size: 54px;
         line-height: 1.18;
-        font-weight: 900;
-        letter-spacing: -0.04em;
-      }
-
-      .stack {
-        display: grid;
-        gap: 28px;
-        width: min(860px, 100%);
-        margin-top: 72px;
-      }
-
-      .pill {
-        display: block;
-        padding: 34px 44px;
-        border: 12px solid currentColor;
-        font-size: 68px;
-        line-height: 1;
         font-weight: 1000;
         letter-spacing: -0.045em;
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 18px 18px 0 currentColor;
       }
 
-      .cream .pill {
-        background: var(--white);
-        box-shadow: 18px 18px 0 var(--ink);
+      .cards {
+        display: grid;
+        gap: 22px;
+        width: 100%;
+        margin-top: 48px;
+      }
+
+      .card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        min-height: 116px;
+        padding: 26px 30px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 28px;
+        background: linear-gradient(135deg, var(--card-strong), rgba(255, 255, 255, 0.055));
+        box-shadow: 0 22px 58px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(14px);
+        color: #eef4ff;
+        font-size: 42px;
+        line-height: 1.12;
+        font-weight: 900;
+        letter-spacing: -0.035em;
+      }
+
+      .card span:first-child {
+        color: var(--cyan);
+        font-size: 30px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .service-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        width: 100%;
+        margin-top: 46px;
+      }
+
+      .service {
+        min-height: 126px;
+        display: grid;
+        place-items: center;
+        padding: 26px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 0 30px rgba(66, 232, 255, 0.07);
+        font-size: 42px;
+        line-height: 1.12;
+        font-weight: 950;
+        letter-spacing: -0.04em;
       }
 
       .footer {
         position: absolute;
         right: 82px;
-        bottom: 92px;
+        bottom: 84px;
         left: 82px;
+        z-index: 2;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 28px;
-        border-top: 10px solid currentColor;
-        padding-top: 28px;
-        font-size: 42px;
-        line-height: 1.1;
-        font-weight: 900;
-        letter-spacing: -0.02em;
+        gap: 24px;
+        color: var(--muted);
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
       }
 
-      .brand {
+      .voice-badge {
+        position: absolute;
+        top: 98px;
+        right: 82px;
+        z-index: 3;
         display: inline-flex;
         align-items: center;
-        gap: 20px;
+        gap: 12px;
+        padding: 14px 20px;
+        border: 1px solid rgba(157, 246, 255, 0.42);
+        border-radius: 999px;
+        color: var(--voice);
+        background: rgba(5, 12, 30, 0.58);
+        box-shadow: 0 0 34px rgba(66, 232, 255, 0.16);
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
       }
 
-      .whale {
-        display: grid;
-        width: 96px;
-        height: 96px;
-        place-items: center;
-        border: 10px solid currentColor;
+      .voice-badge::before {
+        content: "";
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        font-size: 52px;
-        line-height: 1;
-        background: rgba(255, 255, 255, 0.2);
+        background: var(--voice);
+        box-shadow: 0 0 18px var(--voice);
+        animation: pulse 1.2s ease-in-out infinite;
       }
 
-      .burst {
-        position: absolute;
-        width: 360px;
-        height: 360px;
-        border: 18px solid currentColor;
-        transform: rotate(18deg);
-        opacity: 0.18;
+      .progress {
+        width: 320px;
+        height: 8px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.16);
       }
 
-      .burst.one {
-        top: 235px;
-        right: -92px;
-      }
-
-      .burst.two {
-        bottom: 290px;
-        left: -126px;
-        border-radius: 50%;
-      }
-
-      .meter {
-        position: absolute;
-        right: 82px;
-        bottom: 228px;
-        left: 82px;
-        height: 26px;
-        border: 8px solid currentColor;
-        background: rgba(255, 255, 255, 0.28);
-      }
-
-      .meter::after {
+      .progress::after {
         content: "";
         display: block;
         width: 100%;
         height: 100%;
-        background: currentColor;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cyan), var(--violet), var(--magenta));
         transform-origin: left center;
-        animation: fill 8s linear both;
+        animation: fill 30s linear both;
+      }
+
+      .brand-lockup {
+        display: inline-grid;
+        gap: 16px;
+        margin-top: 52px;
+      }
+
+      .brand-name {
+        font-size: 112px;
+        line-height: 1;
+        font-weight: 1000;
+        letter-spacing: -0.06em;
+      }
+
+      .cta {
+        padding: 26px 42px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
+        box-shadow: 0 0 70px rgba(66, 232, 255, 0.34);
+        font-size: 50px;
+        line-height: 1;
+        font-weight: 1000;
+        letter-spacing: -0.04em;
+      }
+
+      .scanline {
+        position: absolute;
+        left: 58px;
+        right: 58px;
+        height: 2px;
+        top: 20%;
+        z-index: 1;
+        background: linear-gradient(90deg, transparent, rgba(66, 232, 255, 0.86), transparent);
+        box-shadow: 0 0 26px rgba(66, 232, 255, 0.82);
+        animation: scan 3.8s ease-in-out infinite;
       }
 
       .pop {
-        animation: pop-in 0.46s cubic-bezier(0.16, 1.2, 0.3, 1) both;
+        animation: pop-in 0.58s cubic-bezier(0.16, 1.2, 0.3, 1) both;
       }
 
-      .slam {
-        animation: slam 0.42s cubic-bezier(0.1, 1.15, 0.25, 1) both;
+      .rise {
+        animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
 
-      .float {
-        animation: floaty 1.4s ease-in-out infinite alternate;
+      .delay-1 {
+        animation-delay: 0.12s;
+      }
+
+      .delay-2 {
+        animation-delay: 0.24s;
+      }
+
+      .delay-3 {
+        animation-delay: 0.36s;
       }
 
       @keyframes pop-in {
         from {
           opacity: 0;
-          transform: translateY(70px) scale(0.92) rotate(-2deg);
+          transform: translateY(44px) scale(0.96);
+          filter: blur(8px);
         }
         to {
           opacity: 1;
-          transform: translateY(0) scale(1) rotate(0deg);
+          transform: translateY(0) scale(1);
+          filter: blur(0);
         }
       }
 
-      @keyframes slam {
+      @keyframes rise-in {
         from {
           opacity: 0;
-          transform: translateY(-95px) scale(1.18) rotate(2deg);
+          transform: translateY(80px);
         }
         to {
           opacity: 1;
-          transform: translateY(0) scale(1) rotate(0deg);
+          transform: translateY(0);
         }
       }
 
-      @keyframes floaty {
+      @keyframes data-flow {
         from {
-          transform: translateY(-12px) rotate(-2deg);
+          transform: translate3d(0, 0, 0);
         }
         to {
-          transform: translateY(12px) rotate(2deg);
+          transform: translate3d(-126px, -210px, 0);
+        }
+      }
+
+      @keyframes rotate-glow {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes scan {
+        0%, 100% {
+          transform: translateY(0);
+          opacity: 0.18;
+        }
+        45% {
+          transform: translateY(1180px);
+          opacity: 0.9;
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          transform: scale(0.78);
+          opacity: 0.52;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
         }
       }
 
@@ -276,43 +435,156 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="jingpian-ad" data-width="1080" data-height="1920" data-duration="8" data-fps="30" data-bg="#ffdf00">
-      <section id="scene-1" class="clip slide yellow" data-start="0" data-duration="2" data-track-index="0" data-track="opening-hook" data-fade="out">
-        <div class="burst one"></div>
-        <div class="burst two"></div>
-        <div class="tag slam">短视频素材太赶？</div>
-        <h1 class="headline pop">剪视频<br />找鲸片</h1>
-        <p class="subline pop">竖屏广告｜信息流物料｜快速出片</p>
-        <div class="footer"><span class="brand"><span class="whale">鲸</span>鲸片</span><span>9:16 DEMO</span></div>
-      </section>
+    <div id="root" data-composition-id="jingpian-service-provider-ad" data-width="1080" data-height="1920" data-duration="30" data-fps="30" data-bg="#050711">
+      <div class="ambient" aria-hidden="true"></div>
+      <div class="scanline" aria-hidden="true"></div>
+      <div class="voice-badge" aria-hidden="true">ZH-CN VOICEOVER</div>
 
-      <section id="scene-2" class="clip slide blue" data-start="2" data-duration="2" data-track-index="1" data-track="services" data-fade="both">
-        <div class="tag slam">只说交付，不吹承诺</div>
-        <h2 class="headline small pop">视频剪辑<br />素材制作</h2>
-        <div class="stack">
-          <span class="pill pop">口播 / 混剪 / 包装</span>
-          <span class="pill pop">封面 / 字幕 / 节奏点</span>
+      <section id="scene-1" class="clip slide" data-start="0" data-duration="3" data-track-index="0" data-track="opening-hook" data-fade="out">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>短视频服务商</div>
+          <h1 class="headline large pop delay-1">手里有客户<br />但<span class="accent">剪辑交付</span><br />跟不上？</h1>
+          <p class="subline pop delay-2">做服务的老板，最怕前端谈得动，后端交不稳。</p>
         </div>
+        <div class="footer"><span>00—03s / DELIVERY BOTTLENECK</span><span class="progress"></span></div>
       </section>
 
-      <section id="scene-3" class="clip slide pink" data-start="4" data-duration="2" data-track-index="2" data-track="batch-delivery" data-fade="both">
-        <div class="burst one float"></div>
-        <div class="tag slam">简单粗暴，适合抖音信息流</div>
-        <h2 class="headline small pop">批量交付<br />大字高识别</h2>
-        <p class="subline pop">纯色背景 + 强对比排版<br />让卖点一眼看见</p>
-      </section>
-
-      <section id="scene-4" class="clip slide cream" data-start="6" data-duration="2" data-track-index="3" data-track="trial-close" data-fade="in">
-        <div class="tag slam">先试剪满意再合作</div>
-        <h2 class="headline pop">剪视频<br />找鲸片</h2>
-        <div class="stack">
-          <span class="pill pop">先看样片</span>
-          <span class="pill pop">确认风格</span>
-          <span class="pill pop">再批量做</span>
+      <section id="scene-2" class="clip slide" data-start="3" data-duration="4" data-track-index="1" data-track="delivery-chaos" data-fade="both">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>需求堆叠</div>
+          <h2 class="headline pop delay-1">客户越多<br />需求越杂<br />修改越多</h2>
+          <div class="cards">
+            <div class="card rise delay-1"><span>CLIENT</span><strong>项目同时推进</strong></div>
+            <div class="card rise delay-2"><span>REVISION</span><strong>反馈版本变多</strong></div>
+            <div class="card rise delay-3"><span>DELIVERY</span><strong>交付节奏容易乱</strong></div>
+          </div>
         </div>
-        <div class="meter" aria-hidden="true"></div>
-        <div class="footer"><span class="brand"><span class="whale">鲸</span>鲸片视频剪辑</span><span>试剪 → 合作</span></div>
+        <div class="footer"><span>03—07s / COMPLEX WORKFLOW</span><span class="progress"></span></div>
+      </section>
+
+      <section id="scene-3" class="clip slide" data-start="7" data-duration="4" data-track-index="2" data-track="capacity-system" data-fade="both">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>真正缺口</div>
+          <h2 class="headline pop delay-1">不只是<br /><span class="accent">剪辑师</span></h2>
+          <p class="subline pop delay-2">而是一套稳定、可复制、能跟标准走的视频交付产能。</p>
+          <div class="emphasis pop delay-3">把交付压力，从人力波动里拆出来。</div>
+        </div>
+        <div class="footer"><span>07—11s / STABLE CAPACITY</span><span class="progress"></span></div>
+      </section>
+
+      <section id="scene-4" class="clip slide" data-start="11" data-duration="5" data-track-index="3" data-track="white-label-support" data-fade="both">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>鲸片剪辑</div>
+          <h2 class="headline large pop delay-1">为服务商提供<br /><span class="accent">白标剪辑</span><br />产能支持</h2>
+          <p class="subline pop delay-2">面向短视频服务商、IP孵化团队、知识内容团队，以及有客户但缺交付产能的团队。</p>
+        </div>
+        <div class="footer"><span>11—16s / WHITE-LABEL EDITING</span><span class="progress"></span></div>
+      </section>
+
+      <section id="scene-5" class="clip slide" data-start="16" data-duration="5" data-track-index="4" data-track="behind-the-scenes" data-fade="both">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>幕后支持</div>
+          <h2 class="headline large pop delay-1">不露品牌<br />不抢客户</h2>
+          <div class="emphasis pop delay-2">只做你背后的视频剪辑交付产能。</div>
+          <p class="subline pop delay-3">你对接客户，我们按标准完成剪辑、素材与版本交付。</p>
+        </div>
+        <div class="footer"><span>16—21s / BEHIND YOUR SERVICE</span><span class="progress"></span></div>
+      </section>
+
+      <section id="scene-6" class="clip slide" data-start="21" data-duration="4" data-track-index="5" data-track="service-scope" data-fade="both">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>可批量承接</div>
+          <h2 class="headline pop delay-1">不同视频类型<br /><span class="accent">统一交付</span></h2>
+          <div class="service-grid">
+            <div class="service rise delay-1">口播视频</div>
+            <div class="service rise delay-1">信息流素材</div>
+            <div class="service rise delay-2">直播切片</div>
+            <div class="service rise delay-2">知识内容</div>
+            <div class="service rise delay-3">商业短视频</div>
+            <div class="service rise delay-3">素材制作</div>
+          </div>
+        </div>
+        <div class="footer"><span>21—25s / BATCH VIDEO DELIVERY</span><span class="progress"></span></div>
+      </section>
+
+      <section id="scene-7" class="clip slide" data-start="25" data-duration="3" data-track-index="6" data-track="trial-first" data-fade="both">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>先试剪</div>
+          <h2 class="headline large pop delay-1">先试剪一条<br />确认标准</h2>
+          <p class="subline pop delay-2">风格、节奏、字幕、包装都确认清楚，满意后再长期合作。</p>
+          <div class="emphasis pop delay-3">先看交付，再谈批量。</div>
+        </div>
+        <div class="footer"><span>25—28s / TRIAL FIRST</span><span class="progress"></span></div>
+      </section>
+
+      <section id="scene-8" class="clip slide" data-start="28" data-duration="2" data-track-index="7" data-track="final-cta" data-fade="in">
+        <div class="content">
+          <div class="kicker pop"><span class="dot"></span>幕后剪辑产能支持</div>
+          <h2 class="headline large pop delay-1">视频交付<br />找<span class="accent">鲸片剪辑</span></h2>
+          <div class="brand-lockup pop delay-2">
+            <div class="brand-name">JINGPIAN</div>
+            <div class="cta">先试剪一条</div>
+          </div>
+        </div>
+        <div class="footer"><span>28—30s / SERVICE PROVIDER AD</span><span class="progress"></span></div>
       </section>
     </div>
+
+    <script>
+      const narration = [
+        { at: 0, text: "做短视频服务的老板，手里有客户，但剪辑交付跟不上？" },
+        { at: 3, text: "客户越多，需求越杂，修改越多，交付节奏越容易乱。" },
+        { at: 7, text: "服务商真正缺的，不只是剪辑师，而是一套稳定的视频交付产能。" },
+        { at: 11, text: "鲸片剪辑，为短视频服务商提供白标剪辑产能支持。" },
+        { at: 16, text: "不露品牌，不抢客户，只做你背后的视频剪辑交付产能。" },
+        { at: 21, text: "口播视频，信息流素材，直播切片，知识内容，商业短视频，都可以批量承接。" },
+        { at: 25, text: "先试剪一条，确认标准，满意后长期合作。" },
+        { at: 28, text: "视频交付，找鲸片剪辑。" },
+      ];
+
+      function selectChineseVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        return (
+          voices.find((voice) => voice.lang === "zh-CN" && /female|xiaoxiao|xiaoyi|tingting|huihui|hanhan|meijia/i.test(voice.name)) ||
+          voices.find((voice) => voice.lang === "zh-CN") ||
+          voices.find((voice) => voice.lang.startsWith("zh")) ||
+          null
+        );
+      }
+
+      function speakLine(line) {
+        const utterance = new SpeechSynthesisUtterance(line.text);
+        const voice = selectChineseVoice();
+        if (voice) {
+          utterance.voice = voice;
+          utterance.lang = voice.lang;
+        } else {
+          utterance.lang = "zh-CN";
+        }
+        utterance.rate = 1.03;
+        utterance.pitch = 1.02;
+        utterance.volume = 1;
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function startVoiceover() {
+        if (!window.speechSynthesis || window.__jingpianVoiceoverStarted) {
+          return;
+        }
+        window.__jingpianVoiceoverStarted = true;
+        window.speechSynthesis.cancel();
+        narration.forEach((line) => {
+          window.setTimeout(() => speakLine(line), line.at * 1000);
+        });
+      }
+
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          selectChineseVoice();
+        };
+        window.setTimeout(startVoiceover, 180);
+        document.addEventListener("click", startVoiceover, { once: true });
+      }
+    </script>
   </body>
 </html>
